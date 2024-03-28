@@ -86,7 +86,8 @@ def compute_posterior(PHI, y, alph, s2):
     #####
     ##### Paste Your implementation from Part 1 here
     #####
-    
+    Mu=np.linalg.inv(PHI.T @ PHI + s2*alph*np.identity(PHI.shape[1]))@PHI.T@y
+    SIGMA=np.linalg.inv(PHI.T @ PHI + s2*alph*np.identity(PHI.shape[1]))*s2
     return Mu, SIGMA
 
 
@@ -99,7 +100,17 @@ def compute_log_marginal(PHI, y, alph, s2):
     #####
     ##### Paste Your implementation from Part 1 here
     #####
-    
+    N, M = PHI.shape
+
+    C = s2 * np.eye(N) + PHI @ PHI.T / alph
+
+    logML = -N/2 * np.log(2*np.pi)
+
+    _, log_det = np.linalg.slogdet(C)
+
+    logML -= log_det / 2
+
+    logML -= y.T @ np.linalg.inv(C) @ y / 2
     return logML
 
 
